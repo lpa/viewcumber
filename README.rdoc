@@ -1,6 +1,10 @@
 = viewcumber
 
-Description goes here.
+Cucumber formatter for easily viewing each step of your scenarios
+
+== Installation
+
+<tt>gem install viewcumber</tt>
 
 == Note on Patches/Pull Requests
  
@@ -14,4 +18,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2010 versapay. See LICENSE for details.
+Copyright (c) 2010 Versapay. See LICENSE for details.
