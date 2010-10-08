@@ -5,13 +5,11 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "viewcumber"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "samuelreh@gmail.com"
-    gem.homepage = "http://github.com/samuelreh/viewcumber"
-    gem.authors = ["samuelreh"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.summary = %Q{ Cucumber formatter for easily viewing each step of your scenarios }
+    gem.homepage = "http://github.com/versapay/viewcumber"
+    gem.authors = ["gregbell", "pcreux", "samuelreh"]
+    gem.add_dependency "cucumber", ">=0.8.5"
+    gem.add_dependency "capybara", ">=0.3"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
