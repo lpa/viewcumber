@@ -6,6 +6,10 @@ Cucumber formatter for easily viewing each step of your scenarios
 
 <tt>gem install viewcumber</tt>
 
+== Usage
+
+<tt>cucumber --format Viewcumber path/to/filename</tt>
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
