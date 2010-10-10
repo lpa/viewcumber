@@ -300,14 +300,14 @@ class Viewcumber
 
  def before_multiline_arg(multiline_arg)
    return if @hide_this_step || @skip_step
-   if Ast::Table === multiline_arg
+   if Cucumber::Ast::Table === multiline_arg
      @builder << '<table>'
    end
  end
 
  def after_multiline_arg(multiline_arg)
    return if @hide_this_step || @skip_step
-   if Ast::Table === multiline_arg
+   if Cucumber::Ast::Table === multiline_arg
      @builder << '</table>'
    end
  end
