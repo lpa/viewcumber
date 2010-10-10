@@ -601,7 +601,7 @@ $('#'+element_id).css('color', '#000000');
    File.copy assets_dir + "/jquery-min.js", "viewcumber/jquery-min.js"
    File.copy assets_dir + "/viewcumber.js", "viewcumber/main.js"
    File.copy assets_dir + "/viewless.html", "viewcumber/viewless.html"
-   FileUtils.cp_r "public", "viewcumber/public"
+   FileUtils.cp_r File.join(Rails.root, "public"), "viewcumber/public"
  end
 
  class SnippetExtractor #:nodoc:
