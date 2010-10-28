@@ -5,7 +5,7 @@ require 'erb'
 require 'cucumber/formatter/ordered_xml_markup'
 require 'cucumber/formatter/duration'
 require 'cucumber/formatter/io'
-require 'FileUtils'
+require 'fileutils'
 
 if respond_to? :AfterStep
   AfterStep do |scenario|
