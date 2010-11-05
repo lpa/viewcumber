@@ -10,7 +10,10 @@ require 'fileutils'
 if respond_to? :AfterStep
   AfterStep do |scenario|
     begin
-      if Capybara.page.driver.respond_to? :html
+      if !@email.blank?
+        Viewcumber.last_step_html = Viewcumber.rewrite_css_and_image_references(@email)
+        @email = nil
+      elsif Capybara.page.driver.respond_to? :html
         Viewcumber.last_step_html = Viewcumber.rewrite_css_and_image_references(Capybara.page.driver.html.to_s)
       end
     rescue Exception => e
@@ -35,6 +38,7 @@ class Viewcumber
    @options = options
    @buffer = {}
    @builder = create_builder(@io)
+   @background_builder = Builder::XmlMarkup.new
    @feature_number = 0
    @scenario_number = 0
    @step_number = 0
@@ -159,8 +163,8 @@ class Viewcumber
  end
 
  def before_background(background)
-   @background_builder = Builder::XmlMarkup.new
    @in_background = true
+   @background_builder = Builder::XmlMarkup.new
    builder << '<li class="background">'
  end
 
@@ -228,7 +232,7 @@ class Viewcumber
 
  def before_steps(steps)
    builder << '<ol>'
-   builder << @background_builder.target! unless @in_background
+   builder << @background_builder.target! unless (@in_background || @background_builder.nil?)
  end
 
  def after_steps(steps)
@@ -371,7 +375,8 @@ class Viewcumber
      list << name if File.directory?(name) and not name.to_s =~ /^\./
      list
    end
-   response_html.gsub(/("|')\/(#{directories.join('|')})/, '\1public/\2')
+   response_html.gsub!(/("|')\/(#{directories.join('|')})/, '\1public/\2')
+   response_html.gsub(/("|')http:\/\/.*\/images/, '\1public/images') 
  end  
 
 protected
