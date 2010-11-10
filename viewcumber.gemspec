@@ -5,11 +5,13 @@
 
 Gem::Specification.new do |s|
   s.name = %q{viewcumber}
-  s.version = "0.0.2"
+  s.version = "0.0.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["gregbell", "pcreux", "samuelreh"]
-  s.date = %q{2010-10-08}
+  s.date = %q{2010-11-10}
+  s.default_executable = %q{viewcumber}
+  s.executables = ["viewcumber"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
@@ -21,13 +23,15 @@ Gem::Specification.new do |s|
      "README.rdoc",
      "Rakefile",
      "VERSION",
+     "bin/viewcumber",
      "lib/assets/jquery-min.js",
      "lib/assets/viewcumber.css",
      "lib/assets/viewcumber.js",
      "lib/assets/viewless.html",
      "lib/viewcumber.rb",
      "test/helper.rb",
-     "test/test_viewcumber.rb"
+     "test/test_viewcumber.rb",
+     "viewcumber.gemspec"
   ]
   s.homepage = %q{http://github.com/versapay/viewcumber}
   s.rdoc_options = ["--charset=UTF-8"]

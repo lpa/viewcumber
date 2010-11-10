@@ -4,11 +4,17 @@ Cucumber formatter for easily viewing each step of your scenarios
 
 == Installation
 
-<tt>gem install viewcumber</tt>
+  gem install viewcumber
 
 == Usage
 
-<tt>cucumber --format Viewcumber path/to/filename</tt>
+  viewcumber path/to/filename
+
+or
+
+  cucumber --format Viewcumber path/to/filename
+
+Then open ./viewcumber/index.html
 
 == Note on Patches/Pull Requests
  

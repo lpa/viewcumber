@@ -8,6 +8,8 @@ begin
     gem.summary = %Q{ Cucumber formatter for easily viewing each step of your scenarios }
     gem.homepage = "http://github.com/versapay/viewcumber"
     gem.authors = ["gregbell", "pcreux", "samuelreh"]
+    gem.default_executable  = "viewcumber"
+    gem.executables         = ["viewcumber"]
     gem.add_dependency "cucumber", ">=0.8.5"
     gem.add_dependency "capybara", ">=0.3"
   end
