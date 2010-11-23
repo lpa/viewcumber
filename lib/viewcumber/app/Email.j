@@ -54,7 +54,7 @@
 
 - (CPString)htmlURL
 {
-  return [[AppController baseURL] stringByAppendingString:htmlFilename];
+  return [[AppController resultsDirURL] stringByAppendingString:htmlFilename];
 }
 
 @end

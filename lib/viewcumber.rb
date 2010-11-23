@@ -40,6 +40,7 @@ class Viewcumber < Cucumber::Formatter::Json
     make_output_dir
     super(step_mother, File.open(results_filename, 'w+'), options)
     copy_app
+    copy_public_folder
   end
 
   def after_step(step)
@@ -81,7 +82,7 @@ class Viewcumber < Cucumber::Formatter::Json
     contents = mail_part.body.to_s
     filename = Digest::SHA1.hexdigest(contents) + content_type.gsub('/', '.') + ".email.html"
 
-    full_file_path = File.join(output_dir, filename)
+    full_file_path = File.join(results_dir, filename)
     unless File.exists?(full_file_path)
       File.open(full_file_path, 'w+') do |f|
         f << prepare_email_content(content_type, contents)
@@ -103,7 +104,7 @@ class Viewcumber < Cucumber::Formatter::Json
   end
 
   def write_step_html_to_file(filename)
-    File.open(File.join(output_dir, filename), 'w+') do |f|
+    File.open(File.join(results_dir, filename), 'w+') do |f|
       f << self.class.last_step_html
     end
   end
@@ -116,18 +117,26 @@ class Viewcumber < Cucumber::Formatter::Json
     @json_file ||= File.join(output_dir, 'results.json')
   end
 
+  def results_dir
+    @results_dir ||= File.join(output_dir, "results")
+  end
+
   def output_dir
     @output_dir ||= File.expand_path("viewcumber")
   end
 
   def make_output_dir
     FileUtils.mkdir output_dir unless File.directory? output_dir
+    FileUtils.mkdir results_dir unless File.directory? results_dir
   end
 
   def copy_app
     app_dir = File.join(File.dirname(__FILE__), "viewcumber", "app")
     FileUtils.cp_r "#{app_dir}/.", output_dir
-    FileUtils.cp_r File.join(Rails.root, "public"), File.join(output_dir, "public")
+  end
+
+  def copy_public_folder
+    FileUtils.cp_r File.join(Rails.root, "public"), File.join(results_dir, "public")
   end
 
 end

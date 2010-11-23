@@ -27,7 +27,10 @@
     MailViewController              mailViewController;
 }
 
-+ (void)baseURL
+/*
+  Returns the base url for the ViewCumber Application
+*/
++ (CPString)baseURL
 {
   if (!window.ViewCumberBaseURL) {
     var urlChunks = window.location.href.split("/");
@@ -35,6 +38,17 @@
     window.ViewCumberBaseURL = [CPString stringWithString:(urlChunks.join("/") + "/")];
   }
   return window.ViewCumberBaseURL;
+}
+
+/*
+  Returns the url to the results directory where the pages and emails live
+*/
++ (CPString)resultsDirURL
+{
+  if (!window.ViewCumberResultsDirURL) {
+    window.ViewCumberResultsDirURL = [[AppController baseURL] stringByAppendingString:@"results/"];
+  }
+  return window.ViewCumberResultsDirURL;
 }
 
 - (void)awakeFromCib
@@ -79,7 +93,7 @@
 
 - (void)stepWasSelected:(Step)step
 {
-  var url = [[AppController baseURL] stringByAppendingString:[step htmlFilename]];
+  var url = [[AppController resultsDirURL] stringByAppendingString:[step htmlFilename]];
   [webView setMainFrameURL:url];
   [mailViewController setStep:step];
 }
