@@ -5,15 +5,15 @@ objj_executeFile("AppController.j",YES);
 main=function(_1,_2){
 CPApplicationMain(_1,_2);
 };
-p;15;AppController.jt;3800;@STATIC;1.0;I;23;Foundation/Foundation.jI;22;AppKit/CPOutlineView.jI;19;Foundation/CPDate.ji;13;FeatureFile.ji;31;FeaturesOutlineViewController.ji;10;Scenario.ji;29;ScenarioTableViewController.ji;20;MailViewController.jt;3574;
+p;15;AppController.jt;3800;@STATIC;1.0;I;23;Foundation/Foundation.jI;22;AppKit/CPOutlineView.ji;13;FeatureFile.ji;31;FeaturesOutlineViewController.ji;10;Scenario.ji;29;ScenarioTableViewController.ji;20;MailViewController.jI;19;Foundation/CPDate.jt;3574;
 objj_executeFile("Foundation/Foundation.j",NO);
 objj_executeFile("AppKit/CPOutlineView.j",NO);
-objj_executeFile("Foundation/CPDate.j",NO);
 objj_executeFile("FeatureFile.j",YES);
 objj_executeFile("FeaturesOutlineViewController.j",YES);
 objj_executeFile("Scenario.j",YES);
 objj_executeFile("ScenarioTableViewController.j",YES);
 objj_executeFile("MailViewController.j",YES);
+objj_executeFile("Foundation/CPDate.j",NO);
 var _1=objj_allocateClassPair(CPObject,"AppController"),_2=_1.isa;
 class_addIvars(_1,[new objj_ivar("theWindow"),new objj_ivar("searchField"),new objj_ivar("webView"),new objj_ivar("stvc"),new objj_ivar("scenarioTableView"),new objj_ivar("fovc"),new objj_ivar("featuresOutlineView"),new objj_ivar("mailWindow"),new objj_ivar("mailViewController")]);
 objj_registerClassPair(_1);

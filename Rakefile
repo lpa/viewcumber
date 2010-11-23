@@ -51,3 +51,14 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+namespace :js do
+
+  desc "Builds and flattens a release version of the Cappuccino viewer. Requires Cappuccino tools"
+  task :build do
+    `cd src && jake deploy`
+    `rm -rf build`
+    `flatten src/Build/Deployment/ViewCumber build`
+  end
+  
+end
