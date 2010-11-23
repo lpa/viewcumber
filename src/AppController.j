@@ -14,6 +14,9 @@
 @import "ScenarioTableViewController.j"
 @import "MailViewController.j"
 
+// Not sure why we need this, but the compiled version requires it
+@import <Foundation/CPDate.j>
+
 @implementation AppController : CPObject
 {
     CPWindow    					theWindow; 
