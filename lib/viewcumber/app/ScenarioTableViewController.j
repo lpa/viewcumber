@@ -14,6 +14,8 @@
     tableView = aTableView;
     [tableView setDelegate: self];
     [tableView setDataSource: self];
+    [tableView setTarget: self];
+    [tableView setDoubleAction:@selector(rowDoubleClicked:)];
   }
   return self;
 }
@@ -51,4 +53,13 @@
     [_delegate stepWasSelected:[[_scenario steps] objectAtIndex:[tableView selectedRow]]];
   }
 }
+
+- (void)rowDoubleClicked:(id)sender
+{
+  if (_delegate &&
+      [_delegate respondsToSelector:(@selector(stepWasDoubleClicked:))]) {
+    [_delegate stepWasDoubleClicked:[[_scenario steps] objectAtIndex:[tableView selectedRow]]];
+  }
+}
+
 @end

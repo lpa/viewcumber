@@ -1,5 +1,6 @@
 require 'cucumber'
 require 'capybara'
+require 'digest/sha1'
 
 require 'cucumber/formatter/json'
 require 'fileutils'
@@ -44,11 +45,62 @@ class Viewcumber < Cucumber::Formatter::Json
   def after_step(step)
     html_file = html_filename_for_step(step)
     @current_step[:html_file] = html_file
+    @current_step[:emails] = emails_for_step(step)
     write_step_html_to_file(html_file)
     super
   end
 
   private
+
+  def emails_for_step(step)
+    ActionMailer::Base.deliveries.collect{|mail| mail_as_json(mail) }
+  end
+
+  def mail_as_json(mail)
+    html_filename = write_email_to_file('text/html', mail)
+    text_filename = write_email_to_file('text/plain', mail)
+    {
+      :to => mail.to,
+      :from => mail.from,
+      :subject => mail.subject,
+      :body => {
+        :html => html_filename,
+        :text => text_filename
+      }
+    }
+  end
+
+  # Writes the content of the given content type to disk and returns
+  # the filename to access it.
+  #
+  # Returns nil if no file was written.
+  def write_email_to_file(content_type, mail)
+    mail_part = mail.parts.find{|part| part.content_type.to_s.include? content_type }
+    return nil unless mail_part
+
+    contents = mail_part.body.to_s
+    filename = Digest::SHA1.hexdigest(contents) + content_type.gsub('/', '.') + ".email.html"
+
+    full_file_path = File.join(output_dir, filename)
+    unless File.exists?(full_file_path)
+      File.open(full_file_path, 'w+') do |f|
+        f << prepare_email_content(content_type, contents)
+      end
+    end
+
+    filename
+  end
+
+  def prepare_email_content(content_type, contents)
+    case content_type
+    when 'text/html'
+      Viewcumber.rewrite_css_and_image_references(contents)
+    when 'text/plain'
+      "<html><body><pre>#{contents}</pre></body></html>"
+    else
+      contents
+    end
+  end
 
   def write_step_html_to_file(filename)
     File.open(File.join(output_dir, filename), 'w+') do |f|

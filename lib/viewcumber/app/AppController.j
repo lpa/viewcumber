@@ -12,6 +12,7 @@
 @import "FeaturesOutlineViewController.j"
 @import "Scenario.j"
 @import "ScenarioTableViewController.j"
+@import "MailViewController.j"
 
 @implementation AppController : CPObject
 {
@@ -22,7 +23,18 @@
     CPTableView 					scenarioTableView;
     FeaturesOutlineViewController	fovc;
     CPOutlineView 					featuresOutlineView;
-    CPString                        baseURL;
+    CPWindow                        mailWindow;
+    MailViewController              mailViewController;
+}
+
++ (void)baseURL
+{
+  if (!window.ViewCumberBaseURL) {
+    var urlChunks = window.location.href.split("/");
+    urlChunks.pop();
+    window.ViewCumberBaseURL = [CPString stringWithString:(urlChunks.join("/") + "/")];
+  }
+  return window.ViewCumberBaseURL;
 }
 
 - (void)awakeFromCib
@@ -36,12 +48,26 @@
     [stvc setDelegate:self];
 
 	// Start loading our data
-    var url = [[self baseURL] stringByAppendingString:"results.json"];
+    var url = [[AppController baseURL] stringByAppendingString:"results.json"];
 	var request = [CPURLRequest requestWithURL:[CPURL URLWithString:url]];
 	var connection = [[CPURLConnection alloc] initWithRequest:request delegate:self];
 
     // In this case, we want the window from Cib to become our full browser window
     [theWindow setFullBridge:YES];
+
+    mailViewController = [[MailViewController alloc] initWithCibName:@"MailView" bundle:nil];
+
+    mailWindow = [[CPWindow alloc] initWithContentRect:CGRectMakeZero() 
+                  styleMask:CPClosableWindowMask | CPResizableWindowMask];
+  
+
+    var mailWindowWidth = 700;
+    var mailWindowLeft = ([theWindow frame].size.width / 2 ) - (mailWindowWidth / 2);
+
+    [mailWindow setFrameOrigin:CGPointMake(mailWindowLeft, 100)];
+    [mailWindow setFrameSize:CGSizeMake(700, 600)];
+
+    [[mailWindow contentView] addSubview:[mailViewController view]];
 }
 
 // Delegate method for FeaturesOutlineViewDelegate
@@ -50,21 +76,17 @@
   [stvc setScenario:scenario];
 }
 
-- (void)baseURL
+
+- (void)stepWasSelected:(Step)step
 {
-  if (!baseURL) {
-    var urlChunks = window.location.href.split("/");
-    urlChunks.pop();
-    baseURL = [CPString stringWithString:(urlChunks.join("/") + "/")];
-  }
-  return baseURL;
+  var url = [[AppController baseURL] stringByAppendingString:[step htmlFilename]];
+  [webView setMainFrameURL:url];
+  [mailViewController setStep:step];
 }
 
-- (void)stepWasSelected:(CPString)step
+- (void)stepWasDoubleClicked:(Step)step
 {
-  CPLog("Received delegate message: %@", step);
-  var url = [[self baseURL] stringByAppendingString:[step htmlFilename]];
-  [webView setMainFrameURL:url];
+  [mailWindow orderFront:self];
 }
 
 
@@ -76,8 +98,12 @@
 
 -(void)connection:(CPURLConnection)connection didReceiveData:(CPString)data;
 {
-  var featureFiles = [FeatureFile featureFilesFromCucumberJSON:JSON.parse(data)];
-  [fovc setFeatureFiles:featureFiles];
+  try {
+    var featureFiles = [FeatureFile featureFilesFromCucumberJSON:JSON.parse(data)];
+    [fovc setFeatureFiles:featureFiles];
+  } catch(e) {
+
+  }
 }
 
 @end
