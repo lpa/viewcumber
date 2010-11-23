@@ -38,20 +38,38 @@ class Viewcumber < Cucumber::Formatter::Json
 
   def initialize(step_mother, path_or_io, options)
     make_output_dir
-    super(step_mother, File.open(results_filename, 'w+'), options)
     copy_app
     copy_public_folder
+    super(step_mother, File.open(results_filename, 'w+'), options)
   end
 
   def after_step(step)
-    html_file = html_filename_for_step(step)
-    @current_step[:html_file] = html_file
+    @current_step[:html_file] = write_html_to_file(Viewcumber.last_step_html)
     @current_step[:emails] = emails_for_step(step)
-    write_step_html_to_file(html_file)
     super
   end
 
   private
+
+
+  # Writes the given html to a file in the results directory
+  # and returns the filename.
+  #
+  # Filename are based on the SHA1 of the contents. This means 
+  # that we will only write the same html once
+  def write_html_to_file(html)
+    return nil unless html && html != ""
+    filename = Digest::SHA1.hexdigest(html) + ".html"
+    full_file_path = File.join(results_dir, filename)
+
+    unless File.exists?(full_file_path)
+      File.open(full_file_path, 'w+') do |f|
+        f  << html
+      end
+    end
+
+    filename
+  end
 
   def emails_for_step(step)
     ActionMailer::Base.deliveries.collect{|mail| mail_as_json(mail) }
@@ -101,16 +119,6 @@ class Viewcumber < Cucumber::Formatter::Json
     else
       contents
     end
-  end
-
-  def write_step_html_to_file(filename)
-    File.open(File.join(results_dir, filename), 'w+') do |f|
-      f << self.class.last_step_html
-    end
-  end
-
-  def html_filename_for_step(step)
-    step.file_colon_line.gsub(/:|\//,'-') + ".html"
   end
 
   def results_filename
