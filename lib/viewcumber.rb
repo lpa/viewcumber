@@ -139,7 +139,7 @@ class Viewcumber < Cucumber::Formatter::Json
   end
 
   def copy_app
-    app_dir = File.join(File.dirname(__FILE__), "viewcumber", "app")
+    app_dir = File.expand_path(File.join('..', '..', 'src'), __FILE__)
     FileUtils.cp_r "#{app_dir}/.", output_dir
   end
 
