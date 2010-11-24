@@ -15,7 +15,6 @@ if respond_to? :AfterStep
         Viewcumber.last_step_html = Viewcumber.rewrite_css_and_image_references(Capybara.page.driver.html.to_s)
       end
     rescue Exception => e
-      p e
     end
   end
 end
