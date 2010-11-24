@@ -23,6 +23,8 @@
     _outlineView = outlineView;
     [_outlineView setDelegate: self];
     [_outlineView setDataSource: self];
+    [_outlineView setBackgroundColor:[CPColor colorWithHexString:@"eef2f8"]];    
+    [[[_outlineView enclosingScrollView] superview] setBackgroundColor:[CPColor colorWithHexString:@"eef2f8"]];    
   }
   return self;
 }
