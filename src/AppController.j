@@ -98,7 +98,9 @@
 - (void)stepWasSelected:(Step)step
 {
   var url = [[AppController resultsDirURL] stringByAppendingString:[step htmlFilename]];
-  [webView setMainFrameURL:url];
+  if(url != [webView mainFrameURL]) {
+    [webView setMainFrameURL:url];
+  }
   [mailViewController setStep:step];
 }
 
