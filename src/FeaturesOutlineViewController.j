@@ -64,6 +64,8 @@
 - (void)setFeatureFiles:(CPArray)newFeatureFiles
 {
   _featureFiles = newFeatureFiles;
+  var sort = [[CPSortDescriptor alloc] initWithKey:@"title" ascending:YES];
+  [_featureFiles sortUsingDescriptors:[sort]];
   [_outlineView reloadData];
 }
 
