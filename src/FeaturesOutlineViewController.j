@@ -11,15 +11,28 @@
 @implementation FeaturesOutlineViewController : CPObject
 {
   CPOutlineView _outlineView  @accessors(property=outlineView, readonly);
+  CPSearchField _searchField  @accessors(property=searchField, readonly);
   CPArray       _featureFiles @accessors(property=featureFiles);
+  CPArray       _allFeatures;
+  BOOL          _isSearching;
+  CPArray       _searchResults;
   id            _delegate     @accessors(property=delegate);
 }
 
-- (id)initWithOutlineView:(CPOutlineView)outlineView
+- (id)initWithOutlineView:(CPOutlineView)outlineView 
+              searchField:(CPSearchField)searchField
 {
   self = [super init];
   if (self) {
     _featureFiles = [CPArray arrayWithArray:[]];
+    _isSearching = NO;
+
+    // Setup the Search Field
+    _searchField = searchField;
+    [_searchField setTarget:self];
+    [_searchField setAction:@selector(didTypeSearch:)];
+
+    // Setup the Outline View
     _outlineView = outlineView;
     [_outlineView setDelegate: self];
     [_outlineView setDataSource: self];
@@ -66,16 +79,60 @@
   _featureFiles = newFeatureFiles;
   var sort = [[CPSortDescriptor alloc] initWithKey:@"title" ascending:YES];
   [_featureFiles sortUsingDescriptors:[sort]];
+  [self reloadAllFeatures];
   [_outlineView reloadData];
 }
 
+-(void)didTypeSearch:(CPSearchField)aSearchField
+{
+  var searchString = [_searchField stringValue];
+  if(searchString == @"") {
+    _isSearching = NO;
+  } else {
+    var searchResults = [];
+    var totalCount = [_allFeatures count];
+    console.log(totalCount);
+    for(var i = 0; i < totalCount; i++) {
+      var obj = [_allFeatures objectAtIndex:i];
+      if([obj title].match(new RegExp(searchString, "i"))) {
+        searchResults.push(obj)
+      }
+    }
+    _searchResults = searchResults;
+    _isSearching = YES;
+  }
+  [_outlineView reloadData];
+}
+
+// Keeps a cache of all the feature files for searching
+- (void)reloadAllFeatures
+{
+  _allFeatures = [CPArray arrayWithArray:[]];
+
+  for(var i = 0; i < [_featureFiles count]; i++) {
+    [_allFeatures addObjectsFromArray:[[_featureFiles objectAtIndex:i] scenarios]];
+  }
+
+  // Sort Alpha
+  var sort = [[CPSortDescriptor alloc] initWithKey:@"title" ascending:YES];
+  [_allFeatures sortUsingDescriptors:[sort]];
+}
+
+//
+// CPOutlineView data delegate methods
+//
+
 - (id)outlineView:(CPOutlineView)outlineView child:(int)index ofItem:(id)item
 {
+  if(_isSearching) {
+    return [_searchResults objectAtIndex:index];
+  } else {
     if (item == NULL) {
         return [_featureFiles objectAtIndex:index];
     } else {
       return [[item scenarios] objectAtIndex:index];
     }
+  }
 }
 
 - (BOOL)outlineView:(CPOutlineView)outlineView isItemExpandable:(id)item
@@ -85,23 +142,20 @@
 
 - (int)outlineView:(CPOutlineView)outlineView numberOfChildrenOfItem:(id)item
 {
+  if(_isSearching) {
+    return [_searchResults count];
+  } else {
     if (item == NULL) {
         return [_featureFiles count];
     } else if([item isKindOfClass:[FeatureFile class]]) {
       return [item scenariosCount];
     }
+  }
 }
 
 - (id)outlineView:(CPOutlineView)outlineView objectValueForTableColumn:(CPTableColumn)tableColumn byItem:(id)item
 {
     return [item title];   
-}
-
-// TODO: Get this working.
-- (BOOL)outlineView:(CPOutlineView)outlineView shouldSelectItem:(id)item
-{
-  CPLog("Select item %@", item);
-  return NO;
 }
 
 /*
@@ -114,7 +168,6 @@
   if (_delegate && 
       [_delegate respondsToSelector:@selector(scenarioWasSelected:)] && 
       [selectedItem isKindOfClass:[Scenario class]]) {
-    CPLog("Scenario is set to: %@", selectedItem);
     [_delegate scenarioWasSelected:selectedItem];
   }
 }

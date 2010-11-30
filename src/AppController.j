@@ -57,7 +57,8 @@
 - (void)awakeFromCib
 {
     // Setup the FeatureOutlineViewController.
-    fovc = [[FeaturesOutlineViewController alloc] initWithOutlineView:featuresOutlineView];
+    fovc = [[FeaturesOutlineViewController alloc] initWithOutlineView:featuresOutlineView
+                                                          searchField:searchField];
     [fovc setDelegate:self];
 
     // Setup the ScenarioTableViewController
