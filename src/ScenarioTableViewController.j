@@ -26,6 +26,7 @@
   [tableView reloadData];
   var firstRow = [CPIndexSet indexSetWithIndex:0];
   [tableView selectRowIndexes:firstRow byExtendingSelection:NO];
+  [self sendDelegateStepWasSelected:[[_scenario steps] objectAtIndex:0]];
 }
 
 // Data Source Methods
@@ -47,6 +48,11 @@
 }
 
 - (void)tableViewSelectionDidChange:(CPNotification)aNotification
+{
+  [self sendDelegateStepWasSelected:[[_scenario steps] objectAtIndex:[tableView selectedRow]]];
+}
+
+- (void)sendDelegateStepWasSelected:(Step)aStep
 {
   if (_delegate &&
       [_delegate respondsToSelector:(@selector(stepWasSelected:))]) {
