@@ -5,7 +5,7 @@ A Cucumber formatter which generates an HTML website to browse your scenarios an
 == Pre-requisites
 
 * Rails 3
-* Cucumber
+* Cucumber (0.8.5 to 0.9.4 - it does not work with cucumber 0.10.0 yet)
 * Capybara
 
 == Installation

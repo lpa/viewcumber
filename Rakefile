@@ -10,8 +10,8 @@ begin
     gem.authors = ["gregbell", "pcreux", "samuelreh"]
     gem.default_executable  = "viewcumber"
     gem.executables         = ["viewcumber"]
-    gem.add_dependency "cucumber", ">=0.8.5"
-    gem.add_dependency "capybara", ">=0.3"
+    gem.add_dependency "cucumber", ">= 0.8.5", "< 0.10.0"
+    gem.add_dependency "capybara", ">= 0.3"
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
