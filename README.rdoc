@@ -1,23 +1,35 @@
 = viewcumber
 
-Cucumber formatter for easily viewing each step of your scenarios
+A Cucumber formatter which generates an HTML website to browse your scenarios and view screen capture of every single step.
+
+== Pre-requisites
+
+* Rails 3
+* Cucumber
+* Capybara
 
 == Installation
 
-  gem install viewcumber
+Add viewcumber to your Gemfile.
+
+  gem 'viewcumber'
 
 == Usage
 
-  viewcumber path/to/filename
+  viewcumber features
 
 or
 
-  cucumber --format Viewcumber path/to/filename
+  cucumber --format Viewcumber features
 
-Then open ./viewcumber/index.html
+Then open ./viewcumber/index.html in Firefox/Safari. It does not work in Chrome.
+
+== Screenshots
+
+* {Screenshot 1}[http://s3.amazonaws.com/scrnshots.com/screenshots/272245/viewcumber_2png]
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
